@@ -18,12 +18,11 @@ class Config:
             print(f"[Config] Warning: {config_path} not found, using defaults/env vars")
         
         # API settings (env vars take precedence)
-        self.api_base_url = os.getenv("OPENAI_BASE_URL") or self._get("api", "base_url") or None
-        self.api_key = os.getenv("OPENAI_API_KEY") or self._get("api", "api_key", "dummy-key-for-local")
-        
+        self.api_base_url = os.getenv("OPENAI_BASE_URL") or self._get("api", "base_url") or "https://openrouter.ai/api/v1"
+        self.api_key = os.getenv("OPENAI_API_KEY") or self._get("api", "api_key", "")
+
         # Translation settings
-        self.model = self._get("translation", "model", "gpt-3.5-turbo")
-        self.model = self._get("translation", "model", "gpt-3.5-turbo")
+        self.model = self._get("translation", "model", "openai/gpt-4o-mini")
         self.target_lang = self._get("translation", "target_lang", "Chinese")
         self.translation_threads = self._getint("translation", "threads", 4)
         
@@ -105,7 +104,7 @@ class Config:
     def print_config(self):
         """Print current configuration for debugging"""
         print("[Config] Current settings:")
-        print(f"  API Base URL: {self.api_base_url or '(default OpenAI)'}")
+        print(f"  API Base URL: {self.api_base_url or '(default OpenRouter)'}")
         print(f"  API Key: {self.api_key[:8]}...{self.api_key[-4:] if len(self.api_key) > 12 else '***'}")
         print(f"  Model: {self.model}")
         print(f"  Target Language: {self.target_lang}")

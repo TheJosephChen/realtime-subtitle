@@ -4,26 +4,24 @@ import os
 import re
 
 class Translator:
-    def __init__(self, api_key=None, base_url=None, model="MBZUAI-IFM/K2-Think-nothink", target_lang="Chinese"):
+    def __init__(self, api_key=None, base_url=None, model="openai/gpt-4o-mini", target_lang="Chinese"):
         """
         Translates text using an LLM.
-        
+
         Args:
-            api_key: OpenAI API Key (or set OPENAI_API_KEY env var).
-            base_url: Optional base URL (e.g. for local generic server like Ollama/LMStudio).
+            api_key: OpenRouter API Key (or set OPENAI_API_KEY env var).
+            base_url: Optional base URL (defaults to OpenRouter).
             model: Model name to use.
             target_lang: The target language for translation.
         """
         self.target_lang = target_lang
         self.model = model
-        
-        # If no key provided, check env. If still none, we might be in local mode (no auth) or fail.
-        # Some local servers don't need a valid key, but the client requires a string.
+
         if not api_key:
-            api_key = os.getenv("OPENAI_API_KEY", "dummy-key-for-local")
-            
+            api_key = os.getenv("OPENAI_API_KEY", "")
+
         if not base_url:
-            base_url = os.getenv("OPENAI_BASE_URL")
+            base_url = os.getenv("OPENAI_BASE_URL", "https://openrouter.ai/api/v1")
 
         self.base_url = base_url
         
@@ -33,7 +31,7 @@ class Translator:
         
         # Logging
         print(f"[Translator] Initialized:")
-        print(f"  - Base URL: {base_url or 'https://api.openai.com/v1 (default)'}")
+        print(f"  - Base URL: {base_url or 'https://openrouter.ai/api/v1 (default)'}")
         print(f"  - Model: {model}")
         print(f"  - Target Language: {target_lang}")
         print(f"  - API Key: {api_key[:8]}...{api_key[-4:] if len(api_key) > 12 else '***'}")

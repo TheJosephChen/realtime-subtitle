@@ -1,9 +1,9 @@
 [api]
-base_url = http://localhost:11434/v1/
-api_key = sk-talkai-bd76c0f60c6f4e50bcfa39fc1dce0efd
+base_url = https://openrouter.ai/api/v1
+api_key = YOUR_OPENROUTER_API_KEY
 
 [translation]
-model = qwen2.5:7b
+model = openai/gpt-4o-mini
 target_lang = Chinese
 threads = 4
 
