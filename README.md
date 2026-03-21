@@ -30,7 +30,9 @@ https://github.com/user-attachments/assets/9982fe5d-3937-42d5-bcfc-e23748c01edf
    pip install -r requirements.txt
    ```
    
-   *(Ensure you have `PyQt6`, `sounddevice`, `numpy`, `openai`, `watchdog` installed)*
+   *(Ensure you have `PyQt6`, `sounddevice`, `numpy`, ~~`openai`~~, `watchdog` installed)*
+
+   *Note: we are using openrouter instead of openai for this project, so you don't need openai on your machine. Just an openrouter api key*
 
    **🪟 Windows Users**:
    1. Double-click `install_windows.bat` to automatically set up the environment.
@@ -38,6 +40,18 @@ https://github.com/user-attachments/assets/9982fe5d-3937-42d5-bcfc-e23748c01edf
 
    **🖥 MacOS Users**:
    1. Use terminal to run `install_mac.sh`
+  
+4. **Errors**:
+
+   If you get the error `ERROR: Failed building wheel for llvmlite` when running any install instructions, run the following commands:
+   ```
+   source .venv/bin/activate
+   pip install --only-binary=:all: llvmlite numba
+   pip install -r requirements.txt
+   ```
+
+   This activates the same `.venv` the script created, installs the binaries first, then re-runs the requirements install.
+
 
 ## ✨ New Features & Quick Start
 - **Modern Control Center**: Manage all settings in a dark-themed Dashboard.
