@@ -27,12 +27,6 @@ class LogItem(QFrame):
         self.layout.setSpacing(2)
         self.setLayout(self.layout)
         
-        # Original Text Label
-        self.original_label = QLabel(f"[{timestamp}] {original_text}")
-        self.original_label.setWordWrap(True)
-        self.original_label.setStyleSheet("color: #aaaaaa; font-family: Arial; font-size: 14px;")
-        self.layout.addWidget(self.original_label)
-        
         # Translated Text Label
         self.translated_label = QLabel(translated_text if translated_text else "...")
         self.translated_label.setWordWrap(True)
@@ -43,7 +37,7 @@ class LogItem(QFrame):
         self.translated_label.setText(text)
 
     def update_original(self, text):
-        self.original_label.setText(f"[{time.strftime('%H:%M:%S')}] {text}")
+        pass
 
 class OverlayWindow(QWidget):
     def __init__(self, display_duration=None, window_width=400, window_height=None):
