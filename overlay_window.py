@@ -1,7 +1,7 @@
 from PyQt6.QtWidgets import (QApplication, QWidget, QVBoxLayout, QGraphicsDropShadowEffect,
                              QHBoxLayout, QLabel, QFrame)
 from PyQt6.QtCore import Qt, QPoint, QTimer, pyqtSignal
-from PyQt6.QtGui import QFont, QColor, QPalette
+from PyQt6.QtGui import QFont, QColor, QPalette, QPainter, QBrush
 
 from ctypes import c_void_p
 import time
@@ -52,7 +52,7 @@ class OverlayWindow(QWidget):
         self.window_width = window_width
 
         screen_geometry = QApplication.primaryScreen().availableGeometry()
-        self.window_height = window_height if window_height else screen_geometry.height()
+        self.window_height = window_height if window_height else screen_geometry.height() // 2
 
         self.initUI()
         self.oldPos = self.pos()
@@ -89,7 +89,7 @@ class OverlayWindow(QWidget):
 
         # Container with dark background
         self.container = QFrame()
-        self.container.setStyleSheet("background-color: rgba(0, 0, 0, 150); border-radius: 10px;")
+        self.container.setStyleSheet("background-color: transparent;")
         container_layout = QVBoxLayout()
         container_layout.setContentsMargins(10, 10, 10, 10)
         self.container.setLayout(container_layout)
@@ -100,7 +100,7 @@ class OverlayWindow(QWidget):
         self.translation_label.setStyleSheet(
             "color: #ffffff; font-family: Arial; font-size: 20px; font-weight: bold;"
         )
-        self.translation_label.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter)
+        self.translation_label.setAlignment(Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignTop)
         container_layout.addWidget(self.translation_label)
 
         layout.addWidget(self.container)
@@ -192,8 +192,8 @@ class OverlayWindow(QWidget):
         is_placeholder = not translated_text or translated_text.strip() in ("", "...", "(translating...)")
 
         if is_placeholder:
-            # Show a loading indicator only when the overlay is idle
-            if self.displayed_chunk_id is None:
+            # Show a loading indicator only when the overlay has never shown anything
+            if self.displayed_chunk_id is None and not self.translation_label.text():
                 self.translation_label.setText("...")
                 self.displayed_chunk_id = chunk_id
                 self.showing_completed = False
@@ -260,6 +260,13 @@ class OverlayWindow(QWidget):
             QTimer.singleShot(2000, lambda: self.save_btn.setText(original_text))
         except Exception as e:
             print(f"[Overlay] Error saving transcript: {e}")
+
+    def paintEvent(self, event):
+        painter = QPainter(self)
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing)
+        painter.setBrush(QBrush(QColor(0, 0, 0, 150)))
+        painter.setPen(Qt.PenStyle.NoPen)
+        painter.drawRoundedRect(self.rect(), 10, 10)
 
     def mousePressEvent(self, event):
         if event.button() == Qt.MouseButton.LeftButton:
